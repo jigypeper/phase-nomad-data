@@ -13,7 +13,7 @@ data Airline = Airline
     , airline_iata :: String      
     } deriving (Show)
 instance ToRow Airline where
-    toRow (Airline c1, c2) = [SQLText (fromString c1), SQLText (fromString c2)]
+    toRow (Airline c1 c2) = [SQLText (fromString c1), SQLText (fromString c2)]
 
 data Airport = Airport
     { airport_name :: String
@@ -21,7 +21,7 @@ data Airport = Airport
     , airport_iata :: String      
     } deriving (Show)
 instance ToRow Airport where
-    toRow (Airport c1, c2, c3) = [SQLText (fromString c1), SQLText (fromString c2), SQLText (fromString c3)]
+    toRow (Airport c1 c2 c3) = [SQLText (fromString c1), SQLText (fromString c2), SQLText (fromString c3)]
     
 readCSVWithDrop :: FromRecord a => FilePath -> Int -> IO (V.Vector a)
 readCSVWithDrop filePath n = do
