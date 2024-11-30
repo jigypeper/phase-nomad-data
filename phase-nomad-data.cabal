@@ -72,6 +72,7 @@ executable phase-nomad-data
                       bytestring,
                       cassava,
                       sqlite-simple,
+                      text,
                       vector,
 
     -- Directories containing source files.
