@@ -50,7 +50,7 @@ main = do
     let processedAirportCsv = V.map (\(_, name, _, country, iata, _, _, _, _, _, _, _, _, _) -> Airport name country iata) filteredAirportCsv
 
     -- Connect to SQLite database and write data
-    conn <- open "././AppDatabase.sqlite"
+    conn <- open "./AppDatabase.sqlite"
     execute_ conn "CREATE TABLE IF NOT EXISTS airlines (id INTEGER PRIMARY KEY, name TEXT NOT NULL, iata_code TEXT NOT NULL)"
     execute_ conn "CREATE TABLE IF NOT EXISTS airports (id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, iata_code TEXT NOT NULL)"
     execute_ conn "DELETE FROM airlines" -- Clear existing data
