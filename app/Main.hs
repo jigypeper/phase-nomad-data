@@ -2,7 +2,7 @@ module Main where
 
 import Data.Csv
 import Data.List
-import Database.SQlite
+import Database.SQLite.Simple
 
 main :: IO ()
 main = putStrLn "Hello, Haskell!"
