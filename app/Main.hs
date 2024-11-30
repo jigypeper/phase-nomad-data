@@ -11,7 +11,7 @@ import qualified Data.Text as T
 data Airline = Airline
     { airline_name :: String
     , airline_iata :: String      
-    } deriving (Show)
+    } deriving (Show, Eq)
 instance ToRow Airline where
     toRow (Airline c1 c2) = [SQLText (T.pack c1), SQLText (T.pack c2)]
 
@@ -19,7 +19,7 @@ data Airport = Airport
     { airport_name :: String
     , country :: String
     , airport_iata :: String      
-    } deriving (Show)
+    } deriving (Show, Eq)
 instance ToRow Airport where
     toRow (Airport c1 c2 c3) = [SQLText (T.pack c1), SQLText (T.pack c2), SQLText (T.pack c3)]
     
