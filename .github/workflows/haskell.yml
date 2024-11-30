@@ -12,32 +12,38 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-haskell@v2
-      with:
-        ghc-version: '9.4.8'
-        cabal-version: '3.10.3'
+    - name: Checkout repository
+      uses: actions/checkout@v4  # Checkout the repository so actions can access it
 
-    - name: Cache
+    - name: Set up GHC and Cabal
+      run: |
+        # Add the GHC 9.4.8 PPA and install GHC and Cabal
+        sudo add-apt-repository ppa:hvr/ghc -y
+        sudo apt-get update
+        sudo apt-get install ghc-9.4.8 cabal-install-3.10
+        ghc --version  # Verify the GHC version
+        cabal --version  # Verify the Cabal version
+
+    - name: Cache Cabal dependencies
       uses: actions/cache@v3
-      env:
-        cache-name: cache-cabal
       with:
-        path: ~/.cabal
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
+        path: |
+          ~/.cabal
+          ~/.ghc
+        key: ${{ runner.os }}-build-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
-          ${{ runner.os }}-
 
     - name: Install dependencies
       run: |
-        cabal update
-        cabal build --only-dependencies --enable-tests --enable-benchmarks
-    - name: Build
-      run: cabal build --enable-tests --enable-benchmarks all
+        cabal update  # Update Cabal's package database
+        cabal build --only-dependencies --enable-tests --enable-benchmarks  # Install dependencies
+
+    - name: Build the project
+      run: cabal build --enable-tests --enable-benchmarks all  # Build the project and tests
+
     - name: Run tests
-      run: cabal test all
+      run: cabal test --enable-tests --enable-benchmarks all  # Run all tests
