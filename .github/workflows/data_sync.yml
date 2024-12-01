@@ -45,7 +45,7 @@ jobs:
 
       - name: Push changes
         if: ${{ steps.compare.outputs.update_airports != '0' || steps.compare.outputs.update_airlines != '0' }}
-        uses: ad-m/github-push-action@v1
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
