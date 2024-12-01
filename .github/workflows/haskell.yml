@@ -55,7 +55,7 @@ jobs:
       run: cabal test --enable-tests --enable-benchmarks all  # Run all tests
 
     - name: Save executable as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: executable
-          path: dist-newstyle/build/*/ghc-*/<your-project-name>/x/phase-nomad-data/build/phase-nomad-data/phase-nomad-data
+      uses: actions/upload-artifact@v4
+      with:
+        name: executable
+        path: dist-newstyle/build/*/ghc-*/<your-project-name>/x/phase-nomad-data/build/phase-nomad-data/phase-nomad-data
