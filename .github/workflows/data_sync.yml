@@ -52,7 +52,7 @@ jobs:
 
   process-data:
     needs: sync-data
-    if: ${{ steps.compare.outputs.update_airports != '0' || steps.compare.outputs.update_airlines != '0' }}
+    if: ${{ needs.steps.compare.outputs.update_airports != '0' || needs.steps.compare.outputs.update_airlines != '0' }}
     runs-on: ubuntu-latest
 
     steps:
