@@ -3,7 +3,7 @@ name: Data Synchronization
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # Runs daily at midnight
 
 permissions:
   contents: write
@@ -23,28 +23,27 @@ jobs:
       - name: Compare data files
         id: compare
         run: |
-          set -e
-          diff -q openflights/data/airports.dat airports.csv || echo "airports.csv is outdated"
-          diff -q openflights/data/airlines.dat airlines.csv || echo "airlines.csv is outdated"
-          echo "::set-output name=update_airports::$(diff -q openflights/data/airports.dat airports.csv > /dev/null; echo $?)"
-          echo "::set-output name=update_airlines::$(diff -q openflights/data/airlines.dat airlines.csv > /dev/null; echo $?)"
+          diff -q openflights/data/airports.dat airports.csv > /dev/null
+          echo "update_airports=$?" >> $GITHUB_ENV
+          diff -q openflights/data/airlines.dat airlines.csv > /dev/null
+          echo "update_airlines=$?" >> $GITHUB_ENV
 
       - name: Update airports.csv
-        if: ${{ steps.compare.outputs.update_airports != '0' }}
+        if: ${{ env.update_airports != '0' }}
         run: |
           cp openflights/data/airports.dat airports.csv
           git add airports.csv
           git commit -m "Update airports.csv from OpenFlights"
 
       - name: Update airlines.csv
-        if: ${{ steps.compare.outputs.update_airlines != '0' }}
+        if: ${{ env.update_airlines != '0' }}
         run: |
           cp openflights/data/airlines.dat airlines.csv
           git add airlines.csv
           git commit -m "Update airlines.csv from OpenFlights"
 
       - name: Push changes
-        if: ${{ steps.compare.outputs.update_airports != '0' || steps.compare.outputs.update_airlines != '0' }}
+        if: ${{ env.update_airports != '0' || env.update_airlines != '0' }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +51,7 @@ jobs:
 
   process-data:
     needs: sync-data
-    if: ${{ needs.steps.compare.outputs.update_airports != '0' || needs.steps.compare.outputs.update_airlines != '0' }}
+    if: ${{ needs.sync-data.outputs.update_airports != '0' || needs.sync-data.outputs.update_airlines != '0' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -79,3 +78,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+
