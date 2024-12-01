@@ -75,7 +75,7 @@ jobs:
           git commit -m "Update SQLite database"
 
       - name: Push SQLite changes
-        uses: ad-m/github-push-action@v1
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
